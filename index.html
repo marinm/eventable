@@ -26,9 +26,62 @@
 			background-color: white;
 			border-radius: 50%;
 		}
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			color: white;
+		}
 	</style>
 </head>
 <body>
 	<div class="target"></div>
+	<ul></ul>
+
+	<script>
+		const LIST_LENGTH = 10;
+
+		const target = document.querySelector('.target');
+		const ul = document.querySelector('ul');
+		const list = [];
+
+		function pushEvent(event) {
+			console.log(event);
+			list.push(event);
+			if (list.length > LIST_LENGTH) {
+				list.shift();
+			}
+			renderList();
+		}
+
+		function renderList() {
+			ul.innerHTML = "";
+
+			for (const event of [...list].reverse()) {
+				const li = document.createElement('li');
+				li.innerText = `${event.timeStamp.toFixed(0)} ${event.type}`;
+				ul.appendChild(li);
+			}
+		}
+
+		const eventNames = [
+			'click',
+			'dblclick',
+			'mousedown',
+			'mouseenter',
+			'mouseleave',
+			'mousemove',
+			'mouseout',
+			'mouseup',
+			'touchcancel',
+			'touchend',
+			'touchmove',
+			'touchstart',
+		];
+
+		for (const name of eventNames) {
+			target.addEventListener(name, pushEvent);
+		}
+	</script>
 </body>
 </html>

@@ -24,13 +24,24 @@
 			align-items: center;
 			overflow: hidden;
 		}
+		.targets {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 2ch;
+		}
 		.target {
-			width: 10rem;
-			height: 10rem;
+			max-width: 10ch;
+			flex-grow: 1;
+			aspect-ratio: 1;
 			background-color: gray;
 			border-radius: 50%;
 			user-select: none;
 			-webkit-user-select: none;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 		table {
 			margin: 0;
@@ -46,7 +57,12 @@
 	</style>
 </head>
 <body>
-	<div class="target"></div>
+	<div class="targets">
+		<div class="target" data-number="1">1</div>
+		<div class="target" data-number="2">2</div>
+		<div class="target" data-number="3">3</div>
+		<div class="target" data-number="4">4</div>
+	</div>
 	<table>
 		<thead>
 			<tr>
@@ -54,6 +70,7 @@
 				<th>Type</th>
 				<th>x</th>
 				<th>y</th>
+				<th>#</th>
 			</tr>
 		</thead>
 		<tbody></tbody>
@@ -62,11 +79,11 @@
 	<script>
 		const LIST_LENGTH = 10;
 
-		const target = document.querySelector('.target');
 		const tbody = document.querySelector('tbody');
 		const list = Array(LIST_LENGTH).fill(null);
 
 		function pushEvent(event) {
+			console.log()
 			list.push(event);
 			if (list.length > LIST_LENGTH) {
 				list.shift();
@@ -87,23 +104,27 @@
 			const tdType = document.createElement('td');
 			const tdPageX = document.createElement('td');
 			const tdPageY = document.createElement('td');
+			const tdNumber = document.createElement('td');
 
 			if (!event) {
 				tdTimestamp.innerText = '-';
 				tdType.innerText = '-';
 				tdPageX.innerText = '-';
 				tdPageY.innerText = '-';
+				tdNumber.innerText = '-';
 			} else {
 				tdTimestamp.innerText = String(event.timeStamp.toFixed(0)).padStart(8, '0');
 				tdType.innerText = event.type;
 				tdPageX.innerText = event.pageX;
 				tdPageY.innerText = event.pageY;
+				tdNumber.innerText = event.target.dataset.number;
 			}
 
 			tr.appendChild(tdTimestamp);
 			tr.appendChild(tdType);
 			tr.appendChild(tdPageX);
 			tr.appendChild(tdPageY);
+			tr.appendChild(tdNumber);
 
 			tbody.prepend(tr);
 		}
@@ -124,7 +145,10 @@
 		];
 
 		for (const name of eventNames) {
-			target.addEventListener(name, pushEvent, {passive: true});
+			document.querySelectorAll('.target')
+				.forEach(
+					target => target.addEventListener(name, pushEvent, {passive: true})
+				);
 		}
 
 		// Add some filler items

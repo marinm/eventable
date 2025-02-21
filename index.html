@@ -11,7 +11,7 @@
 		body {
 			font-family: sans-serif;
 			background-color: black;
-			padding: 0;
+			padding: 5dvh 5dvw;
 			margin: 0;
 			box-sizing: border-box;
 			width: 100dvw;
@@ -48,6 +48,7 @@
 			padding: 0;
 			color: white;
 			width: 30ch;
+			font-size: 1.1rem;
 			font-family: monospace;
 		}
 		th {
@@ -79,24 +80,11 @@
 	<script>
 		const LIST_LENGTH = 10;
 
-		const tbody = document.querySelector('tbody');
-		const list = Array(LIST_LENGTH).fill(null);
-
 		function pushEvent(event) {
-			console.log()
-			list.push(event);
-			if (list.length > LIST_LENGTH) {
-				list.shift();
-			}
-			renderList();
-		}
-
-		function renderList() {
+			const tbody = document.querySelector('tbody');
 			if (tbody.childNodes.length >= LIST_LENGTH) {
 				tbody.removeChild(tbody.lastChild);
 			}
-
-			const event = list[0];
 
 			const tr = document.createElement('tr');
 
@@ -152,7 +140,7 @@
 		}
 
 		// Add some filler items
-		list.forEach(() => pushEvent(null));
+		Array(LIST_LENGTH).fill(null).forEach(() => pushEvent(null));
 	</script>
 </body>
 </html>

@@ -52,7 +52,6 @@
 		const target = document.querySelector('.target');
 		const ul = document.querySelector('ul');
 		const list = Array(LIST_LENGTH).fill(null);
-		console.log(list);
 
 		function pushEvent(event) {
 			list.push(event);
@@ -63,15 +62,17 @@
 		}
 
 		function renderList() {
-			ul.innerHTML = "";
-
-			for (const event of [...list].reverse()) {
-				const li = document.createElement('li');
-				li.innerText = event !== null
-					? `${String(event.timeStamp.toFixed(0)).padStart(8, '0')} ${event.type}`
-					: '-';
-				ul.appendChild(li);
+			if (ul.childNodes.length >= LIST_LENGTH) {
+				ul.removeChild(ul.lastChild);
 			}
+
+			const event = list[0];
+
+			const li = document.createElement('li');
+			li.innerText = event !== null
+				? `${String(event.timeStamp.toFixed(0)).padStart(8, '0')} ${event.type}`
+				: '-';
+			ul.prepend(li);
 		}
 
 		const eventNames = [
@@ -93,7 +94,8 @@
 			target.addEventListener(name, pushEvent, {passive: true});
 		}
 
-		renderList();
+		// Add some filler items
+		list.forEach(() => pushEvent(null));
 	</script>
 </body>
 </html>

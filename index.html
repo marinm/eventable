@@ -5,6 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Eventable</title>
 	<style>
+		* {
+			touch-action: manipulation;
+		}
 		body {
 			font-family: sans-serif;
 			background-color: black;
@@ -20,37 +23,47 @@
 			justify-content: center;
 			align-items: center;
 			overflow: hidden;
-			touch-action: manipulation;
 		}
 		.target {
 			width: 10rem;
 			height: 10rem;
 			background-color: white;
 			border-radius: 50%;
+			user-select: none;
+			-webkit-user-select: none;
 		}
-		ul {
-			list-style-type: none;
+		table {
 			margin: 0;
 			padding: 0;
 			color: white;
 			width: 30ch;
-		}
-		li {
-			width: 100%;
-			text-align: center;
 			font-family: monospace;
+		}
+		th {
+			text-align: start;
+			border-bottom: 1px solid white;
 		}
 	</style>
 </head>
 <body>
 	<div class="target"></div>
-	<ul></ul>
+	<table>
+		<thead>
+			<tr>
+				<th>Timestamp</th>
+				<th>Type</th>
+				<th>x</th>
+				<th>y</th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
 
 	<script>
 		const LIST_LENGTH = 10;
 
 		const target = document.querySelector('.target');
-		const ul = document.querySelector('ul');
+		const tbody = document.querySelector('tbody');
 		const list = Array(LIST_LENGTH).fill(null);
 
 		function pushEvent(event) {
@@ -62,17 +75,37 @@
 		}
 
 		function renderList() {
-			if (ul.childNodes.length >= LIST_LENGTH) {
-				ul.removeChild(ul.lastChild);
+			if (tbody.childNodes.length >= LIST_LENGTH) {
+				tbody.removeChild(tbody.lastChild);
 			}
 
 			const event = list[0];
 
-			const li = document.createElement('li');
-			li.innerText = event !== null
-				? `${String(event.timeStamp.toFixed(0)).padStart(8, '0')} ${event.type}`
-				: '-';
-			ul.prepend(li);
+			const tr = document.createElement('tr');
+
+			const tdTimestamp = document.createElement('td');
+			const tdType = document.createElement('td');
+			const tdPageX = document.createElement('td');
+			const tdPageY = document.createElement('td');
+
+			if (!event) {
+				tdTimestamp.innerText = '-';
+				tdType.innerText = '-';
+				tdPageX.innerText = '-';
+				tdPageY.innerText = '-';
+			} else {
+				tdTimestamp.innerText = String(event.timeStamp.toFixed(0)).padStart(8, '0');
+				tdType.innerText = event.type;
+				tdPageX.innerText = event.pageX;
+				tdPageY.innerText = event.pageY;
+			}
+
+			tr.appendChild(tdTimestamp);
+			tr.appendChild(tdType);
+			tr.appendChild(tdPageX);
+			tr.appendChild(tdPageY);
+
+			tbody.prepend(tr);
 		}
 
 		const eventNames = [

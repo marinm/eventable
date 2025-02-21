@@ -33,6 +33,12 @@
 			margin: 0;
 			padding: 0;
 			color: white;
+			width: 30ch;
+		}
+		li {
+			width: 100%;
+			text-align: center;
+			font-family: monospace;
 		}
 	</style>
 </head>
@@ -45,10 +51,10 @@
 
 		const target = document.querySelector('.target');
 		const ul = document.querySelector('ul');
-		const list = [];
+		const list = Array(LIST_LENGTH).fill(null);
+		console.log(list);
 
 		function pushEvent(event) {
-			console.log(event);
 			list.push(event);
 			if (list.length > LIST_LENGTH) {
 				list.shift();
@@ -61,7 +67,9 @@
 
 			for (const event of [...list].reverse()) {
 				const li = document.createElement('li');
-				li.innerText = `${event.timeStamp.toFixed(0)} ${event.type}`;
+				li.innerText = event !== null
+					? `${String(event.timeStamp.toFixed(0)).padStart(8, '0')} ${event.type}`
+					: '-';
 				ul.appendChild(li);
 			}
 		}
@@ -82,8 +90,10 @@
 		];
 
 		for (const name of eventNames) {
-			target.addEventListener(name, pushEvent);
+			target.addEventListener(name, pushEvent, {passive: true});
 		}
+
+		renderList();
 	</script>
 </body>
 </html>
